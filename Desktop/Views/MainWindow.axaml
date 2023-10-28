@@ -1,0 +1,130 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:Desktop.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Desktop">
+
+    <Design.DataContext>
+        <viewModels:MainViewModel />
+    </Design.DataContext>
+
+
+    <Grid RowDefinitions="7*, 50*, 10*">
+
+        <Grid.Styles>
+            <Style Selector="Button">
+                <Setter Property="Background" Value="Transparent"></Setter>
+            </Style>
+            <Style Selector="Button:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="RenderTransform" Value="scale(1.11)" />
+            </Style>
+        </Grid.Styles>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="*, *" Background="Aqua">
+            <Grid Grid.Column="0" Background="Yellow">
+
+            </Grid>
+
+            <Grid Grid.Column="1" Background="Cyan">
+                <Button Click="OnAddSoundButtonClick" Content="Add" HorizontalAlignment="Center" />
+                <Button HorizontalAlignment="Right">
+                    <Svg Path="/Assets/settings-ic.svg" />
+                </Button>
+            </Grid>
+        </Grid>
+        <!-- Main -->
+        <Grid Grid.Row="1" Background="White">
+            <ListBox ItemsSource="{Binding Sounds}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, *">
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Select"
+                                              Command="{Binding $parent[ListBox].((vm:MainViewModel)DataContext).SelectSoundCommand}"
+                                              CommandParameter="{Binding }" />
+                                    <MenuItem Header="Rename" />
+                                    <MenuItem Header="Add binding" />
+                                    <MenuItem Header="Delete"
+                                              Command="{Binding $parent[ListBox].((vm:MainViewModel)DataContext).DeleteSoundCommand}"
+                                              CommandParameter="{Binding }" />
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Grid Column="0">
+                                <Button Content="{Binding Name}"
+                                        Command="{Binding $parent[ListBox].((vm:MainViewModel)DataContext).SelectSoundCommand}"
+                                        CommandParameter="{Binding }" />
+                            </Grid>
+                            <Grid Column="1">
+                                <Button HorizontalAlignment="Right"
+                                        Command="{Binding $parent[ListBox].((vm:MainViewModel)DataContext).DeleteSoundCommand}"
+                                        CommandParameter="{Binding }">
+                                    <Svg Path="/Assets/trash-ic.svg" MaxHeight="20" MaxWidth="20" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!-- Footer -->
+        <Grid Grid.Row="2" ColumnDefinitions="*, 2*, *" Background="Wheat">
+            <Grid Grid.Column="0">
+                <TextBlock Text="{Binding SelectedSound.Name}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <StackPanel>
+                    <TextBlock Name="PlayingTime" Background="Yellow"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid RowDefinitions="*, *">
+                    <Grid Row="0" Background="White">
+                        <Button Click="OnPlayButtonClick"
+                                HorizontalAlignment="Center">
+                            <Image Name="PlaySvgImage" Source="{SvgImage /Assets/play-ic.svg}" Margin="5" />
+                        </Button>
+                    </Grid>
+                    <Grid Row="1" Background="Aqua">
+                        <!-- <TextBlock Text="{Binding CurrentTimeSpan.Seconds}"/> -->
+                        <Slider Name="CurrentTimeSlider"
+                                Padding="10"
+                                Minimum="0" />
+                    </Grid>
+                </Grid>
+
+
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid ColumnDefinitions="*, *">
+                    <Grid Column="0">
+
+                    </Grid>
+                    <Grid Column="1">
+                        <!-- <StackPanel Orientation="Horizontal"> -->
+                        <!-- <Svg Path="/Assets/volume-min.svg" /> -->
+                        <Slider Name="VolumeSlider" VerticalAlignment="Center"
+                                Padding="10"
+                                Minimum="0"
+                                Maximum="1" />
+                        <!-- </StackPanel> -->
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Window>
